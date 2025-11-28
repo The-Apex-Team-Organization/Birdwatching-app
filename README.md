@@ -1,2 +1,2 @@
 # Birdwatching-app
-Repository for automation setup
+Repository for automation setup.

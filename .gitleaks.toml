@@ -23,3 +23,9 @@ description = "Detects password credentials"
 regex = '''(?i)(password|pass|secret|pwd|token)\s*[:=]\s*['"`]([a-zA-Z0-9!@#$%^&*()_+=\-[\]{}|;:'",.<>/?~]{8,})['"`]'''
 tags = ["secret", "password", "credential"]
 keywords = ["password", "pass", "secret", "pwd", "token"]
+
+[allowlist]
+description = "Ignore test data"
+paths = [
+    "tests/.*",
+]

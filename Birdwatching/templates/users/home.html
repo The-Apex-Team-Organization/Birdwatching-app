@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<div class="mt-5 text-center">
+  {% if session.get("user_id") %}
+  <h2>Welcome, {{ session["username"] }}! 👋</h2>
+  <a
+    class="btn btn-outline-warning mt-3"
+    href="{{ url_for('users.edit', id=session['user_id']) }}"
+    >Edit</a
+  >
+  <a class="btn btn-outline-danger mt-3" href="{{ url_for('auth.logout') }}"
+    >Logout</a
+  >
+  <div class="row g-4">
+    {% for post in posts %}
+    <div class="col-12 col-sm-6 col-md-3 mb-4">
+      <div class="card h-100 shadow-sm">
+        <img
+          src="{{ create_presigned_url(post['image_path']) }}"
+          class="card-img-top"
+          alt="{{ post['location'] }}"
+          style="height: 250px; object-fit: cover"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ post['location'] }}</h5>
+          <p class="card-text">
+            <small class="text-muted">Created: {{ post['created'] }}</small>
+          </p>
+        </div>
+        <div class="card-footer text-end">
+          <a
+            href="{{ url_for('posts.edit', post_id=post['id']) }}"
+            class="btn btn-sm btn-warning"
+            >Edit</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <h2>Welcome, Guest!</h2>
+  <a class="btn btn-primary mt-3" href="{{ url_for('auth.login') }}">Login</a>
+  <a class="btn btn-success mt-3" href="{{ url_for('auth.register') }}"
+    >Register</a
+  >
+  {% endif %}
+</div>
+{% endblock %}

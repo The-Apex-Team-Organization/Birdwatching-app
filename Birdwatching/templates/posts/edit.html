@@ -1,0 +1,34 @@
+{% extends 'base.html' %} {% block content %}
+<h1>{% block title %} Edit {% endblock %}</h1>
+
+<form method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="location">Location</label>
+    <input
+      type="text"
+      name="location"
+      placeholder="Post location"
+      class="form-control"
+      value="{{ request.form['location'] or post['location'] }}"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="image">Image</label>
+    <input type="file" name="image" class="form-control" accept="image/*" />
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+<hr />
+
+<form action="{{ url_for('posts.delete', post_id=post['id']) }}" method="POST">
+  <input
+    type="submit"
+    value="Delete Post"
+    class="btn btn-danger btn-sm"
+    onclick="return confirm('Are you sure you want to delete this post?')"
+  />
+</form>
+{% endblock %}

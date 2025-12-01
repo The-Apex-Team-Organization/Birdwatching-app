@@ -1,2 +1,1 @@
-# Birdwatching-app
-Repository for automation setup.
+# Write here your readme

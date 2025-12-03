@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% block content %}
+<h1 class="mb-4 text-center">
+  {% block title %} Welcome to BirdWatching {% endblock %}
+</h1>
+
+<div class="row g-4">
+  {% for post in posts %}
+  <div class="col-12 col-sm-6 col-md-3 mb-4">
+    <div class="card h-100 shadow-sm">
+      <img
+        src="{{ create_presigned_url(post['image_path']) }}"
+        class="card-img-top"
+        alt="{{ post['location'] }}"
+        style="height: 250px; object-fit: cover"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ post['location'] }}</h5>
+        <p class="card-text mb-0">
+          <small class="text-muted">Created: {{ post['created'] }}</small>
+        </p>
+        <p class="card-text mb-0">
+          <small class="text-muted">by: {{ post['username'] }}</small>
+        </p>
+      </div>
+      {% if session["user_role"] == "admin" %}
+      <div class="card-footer text-end">
+        <a
+          href="{{ url_for('posts.edit', post_id=post['id']) }}"
+          class="btn btn-sm btn-warning"
+          >Edit</a
+        >
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

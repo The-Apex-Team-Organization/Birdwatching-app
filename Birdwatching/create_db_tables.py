@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import psycopg2
 from werkzeug.security import generate_password_hash
 
-load_dotenv(dotenv_path="../.env")
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 
 def create_database_tables():
@@ -19,7 +19,7 @@ def create_database_tables():
         )
 
         cursor = connection.cursor()
-        with open("schema.sql", "r") as f:
+        with open("schema.sql", "r", encoding="utf-8-sig") as f:
             cursor.execute(f.read())
 
         hashed_pw = generate_password_hash("root")

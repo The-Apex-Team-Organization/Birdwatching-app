@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import psycopg2
 from werkzeug.security import generate_password_hash
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+load_dotenv(dotenv_path="../.env")
 
 
 def create_database_tables():

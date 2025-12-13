@@ -10,4 +10,5 @@ coverage
 coverage.xml
 *.log
 conversations/
-
+Birdwatching/static/uploads/
+Birdwatching/uploads/

@@ -15,10 +15,14 @@ from dotenv import load_dotenv
 def create_app():
     load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
+
     app = Flask(__name__)
-    app.secret_key = os.environ("SECRET_KEY")
+    app.secret_key = os.environ.get("SECRET_KEY")
     app.config.from_object(Config)
     app.jinja_env.globals['create_presigned_url'] = create_presigned_url
+    
+    upload_folder = app.config['UPLOAD_FOLDER']
+    os.makedirs(upload_folder, exist_ok=True)
 
     init_db(app)
 

@@ -90,6 +90,7 @@ class MCPClient:
             return self.llm.messages.create(
                 model="claude-sonnet-4-5-20250929",
                 max_tokens=1000,
+                system = "You are a Birdwatching assistant. Answer general questions without using tools. Use tools only when the user's query explicitly requires information contained in the database. Use can use tools only if the user asks for specific data related to birdwatching posts or documentation. Generally, avoid using tools for casual conversation or unrelated queries.",
                 messages=self.messages,
                 tools=self.tools,
             )
@@ -97,13 +98,16 @@ class MCPClient:
             self.logger.error(f"Failed to call LLM: {str(e)}")
             raise Exception(f"Failed to call LLM: {str(e)}")
 
-    async def process_query(self, query: str):
+    async def process_query(self, query: str, user_id: Optional[int] = None):
         try:
             self.logger.info(
                 f"Processing new query: {query[:100]}..."
             )
+            query_with_id = query
+            if user_id is not None:
+                query_with_id = f"user's id {user_id}. {query}"
 
-            user_message = {"role": "user", "content": query}
+            user_message = {"role": "user", "content": query_with_id}
             self.messages.append(user_message)
             await self.log_conversation(self.messages)
             messages = [user_message]

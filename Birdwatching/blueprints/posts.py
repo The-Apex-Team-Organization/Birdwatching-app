@@ -87,7 +87,8 @@ def create():
             flash('Invalid file type!')
         else:
             filename = secure_filename(
-                f"{datetime.datetime.now()}_{file.filename}")
+                f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{file.filename}")
+
             upload_to_s3(file, filename)
             post_sql(
                 'INSERT INTO posts (user_id, location, image_path) VALUES (:user_id, :location, :image_path)', {
@@ -97,3 +98,4 @@ def create():
         return redirect(url_for('main.index'))
 
     return render_template('posts/create.html')
+

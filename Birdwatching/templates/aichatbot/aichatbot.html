@@ -1,0 +1,123 @@
+{% extends 'base.html' %} {% block title %}Chatbot{% endblock %} {% block
+content %}
+<style>
+  .chat_container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f4f6f8;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .chat_header {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #2c3e50;
+  }
+  .chat_box {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+  }
+  .chat_message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    max-width: 80%;
+    word-wrap: break-word;
+  }
+  .chat_message.user {
+    background: #3498db;
+    color: white;
+    align-self: flex-end;
+  }
+  .chat_message.assistant {
+    background: #2ecc71;
+    color: white;
+    align-self: flex-start;
+  }
+  .chat_input {
+    display: flex;
+    gap: 10px;
+  }
+  .chat_input input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  .chat_input button {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .chat_input button:hover {
+    background-color: #2980b9;
+  }
+</style>
+
+<div class="chat_container">
+  <div class="chat_header">MCP Chatbot</div>
+  <div class="chat_box" id="chat"></div>
+  <div class="chat_input">
+    <input type="text" id="message" placeholder="Type your message..." />
+    <button onclick="send_message()">Send</button>
+  </div>
+</div>
+
+<script>
+  async function send_message() {
+    const input = document.getElementById("message");
+    const message = input.value;
+    if (!message) return;
+
+    const chat = document.getElementById("chat");
+    const user_msg = document.createElement("div");
+    user_msg.className = "chat_message user";
+    user_msg.textContent = message;
+    chat.appendChild(user_msg);
+    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+
+    const resp = await fetch("/chatbot/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: message }),
+    });
+    const data = await resp.json();
+
+    if (data.messages) {
+      data.messages.forEach((m) => {
+        if (m.role === "assistant") {
+          const assistant_msg = document.createElement("div");
+          assistant_msg.className = "chat_message assistant";
+          if (typeof m.content === "string") {
+            assistant_msg.textContent = m.content;
+          } else if (Array.isArray(m.content)) {
+            assistant_msg.textContent = m.content
+              .map((c) => c.content || "")
+              .join(" ");
+          }
+          chat.appendChild(assistant_msg);
+        }
+      });
+    }
+    chat.scrollTop = chat.scrollHeight;
+  }
+</script>
+{% endblock %}

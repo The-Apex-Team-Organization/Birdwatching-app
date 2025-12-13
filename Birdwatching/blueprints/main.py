@@ -11,3 +11,4 @@ main_bp = Blueprint("main", __name__)
 def index():
     posts = get_posts_users()
     return render_template('index.html', posts=posts)
+

@@ -19,7 +19,7 @@ def create_database_tables():
         )
 
         cursor = connection.cursor()
-        with open("schema.sql", "r") as f:
+        with open("schema.sql", "r", encoding="utf-8-sig") as f:
             cursor.execute(f.read())
 
         hashed_pw = generate_password_hash("root")

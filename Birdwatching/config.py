@@ -16,3 +16,5 @@ class Config:
     BUCKET_NAME = os.getenv("BUCKET_NAME")
     DATABASE_URL = f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
     REGION       = os.getenv("REGION")
+
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static', 'uploads')

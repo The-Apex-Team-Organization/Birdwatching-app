@@ -20,9 +20,6 @@ def create_app():
     app.secret_key = os.environ.get("SECRET_KEY")
     app.config.from_object(Config)
     app.jinja_env.globals['create_presigned_url'] = create_presigned_url
-    
-    upload_folder = app.config['UPLOAD_FOLDER']
-    os.makedirs(upload_folder, exist_ok=True)
 
     init_db(app)
 

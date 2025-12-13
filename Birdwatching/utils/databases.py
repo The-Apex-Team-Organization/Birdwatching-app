@@ -1,4 +1,3 @@
-
 from sqlalchemy import DateTime, insert, select, func, text
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import Sequence
@@ -7,13 +6,39 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+import os
+from dotenv import load_dotenv
+
+dotenv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.env"))
+load_dotenv(dotenv_path)
+
 
 engine = None
 
 
-def init_db(app):
+def _create_engine_from_url(db_url):
     global engine
-    engine = create_engine(app.config["DATABASE_URL"], echo=True)
+    engine = create_engine(db_url, echo=True)
+    return engine
+
+
+def init_db(app):
+    _create_engine_from_url(app.config["DATABASE_URL"])
+    
+def init_db_for_mcp():
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        host = os.getenv("DATABASE_HOST")
+        name = os.getenv("DATABASE_NAME")
+        user = os.getenv("DATABASE_USER")
+        password = os.getenv("DATABASE_PASSWORD")
+        port = os.getenv("DATABASE_PORT")
+        
+        try:
+            db_url = f"postgresql://{user}:{password}@{host}:{port}/{name}"
+        except TypeError:
+            pass     
+    _create_engine_from_url(db_url)
 
 
 class Base(DeclarativeBase):
@@ -97,6 +122,11 @@ def post_sql(sql, params=None):
     with Session(engine) as session:
         session.execute(text(sql), params)
         session.commit()
+
+def post_sql_select(sql, params=None):
+    with Session(engine) as session:
+        result = session.execute(text(sql), params)
+        return result.first()
 
 
 def get_user(id):
